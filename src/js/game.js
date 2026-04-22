@@ -3,14 +3,18 @@
  * - 문제 출제, 정답 처리, 종료 화면
  */
 
-import { TIMEOUT_REVEAL_DURATION } from './config.js';
+import { CHOSUNG, TIMEOUT_REVEAL_DURATION } from './config.js';
 import { state, resetGame } from './state.js';
 import { WORDS } from '../data/words.js';
-import { getChosung, shuffle, $ } from './utils.js';
+import { getChosung, shuffle, $, $$ } from './utils.js';
 import { startTimer, stopTimer, hideTimer } from './timer.js';
 import { TTS_AVAILABLE, speak } from './tts.js';
+import { playCorrect, playIncorrect } from './sound.js';
 import { goTo } from './ui.js';
 import { filterWords } from './settings.js';
+
+const INPUT_CORRECT_DELAY = 1200;
+const INPUT_WRONG_DELAY   = 2000;
 
 /**
  * 게임 시작: 문제 풀 구성 → 첫 문제 로드
@@ -68,9 +72,17 @@ export function loadQuestion() {
   const ttsBtn = $('#tts-btn');
   ttsBtn.style.display = (TTS_AVAILABLE && state.settings.ttsEnabled) ? 'inline-block' : 'none';
 
-  // 버튼 상태
-  $('#check-row').style.display = 'flex';
-  $('#result-row').style.display = 'none';
+  // 입력 모드 분기
+  if (state.settings.inputMode) {
+    $('#chosung-input-area').style.display = 'flex';
+    $('#check-row').style.display = 'none';
+    $('#result-row').style.display = 'none';
+    renderChosungSlots(q.word);
+  } else {
+    $('#chosung-input-area').style.display = 'none';
+    $('#check-row').style.display = 'flex';
+    $('#result-row').style.display = 'none';
+  }
 
   // 진행바
   const pct = (state.game.currentIdx / state.game.questions.length) * 100;
@@ -129,22 +141,29 @@ export function revealAnswer(timedOut) {
   wordEl.classList.add('revealed');
 
   $('#check-row').style.display = 'none';
+  $('#chosung-input-area').style.display = 'none';
 
   if (timedOut) {
     // 시간 초과: 오답 처리 후 잠시 보여주고 자동 이동
     state.game.wrongAnswers.push({ ...q, reason: 'timeout' });
+    playIncorrect();
     if (state.settings.ttsEnabled) speak(q.word);
-    setTimeout(() => {
-      state.game.currentIdx++;
-      if (state.game.currentIdx >= state.game.questions.length) {
-        endGame();
-      } else {
-        loadQuestion();
-      }
-    }, TIMEOUT_REVEAL_DURATION);
+    setTimeout(advance, TIMEOUT_REVEAL_DURATION);
   } else {
     $('#result-row').style.display = 'flex';
     if (state.settings.ttsEnabled) speak(q.word);
+  }
+}
+
+/**
+ * 다음 문제로 이동 (또는 종료)
+ */
+function advance() {
+  state.game.currentIdx++;
+  if (state.game.currentIdx >= state.game.questions.length) {
+    endGame();
+  } else {
+    loadQuestion();
   }
 }
 
@@ -156,15 +175,12 @@ export function markAnswer(correct) {
   if (correct) {
     state.game.score++;
     $('#score').textContent = state.game.score;
+    playCorrect();
   } else {
     state.game.wrongAnswers.push({ ...q, reason: 'wrong' });
+    playIncorrect();
   }
-  state.game.currentIdx++;
-  if (state.game.currentIdx >= state.game.questions.length) {
-    endGame();
-  } else {
-    loadQuestion();
-  }
+  advance();
 }
 
 /**
@@ -254,4 +270,108 @@ export function toggleReview() {
   list.classList.toggle('open');
   const isOpen = list.classList.contains('open');
   btn.textContent = btn.textContent.replace(/[▼▲]/, isOpen ? '▲' : '▼');
+}
+
+/* =========================================================
+ * 초성 입력 모드
+ * ========================================================= */
+
+/**
+ * 키보드(자음 19개 + 지우기)를 한 번 렌더링 — main.js 초기화 시 호출
+ */
+export function renderChosungKeyboard() {
+  const kb = $('#chosung-keyboard');
+  if (!kb) return;
+  kb.innerHTML = '';
+  CHOSUNG.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'chosung-key';
+    btn.textContent = c;
+    btn.onclick = () => pressChosung(c);
+    kb.appendChild(btn);
+  });
+  const erase = document.createElement('button');
+  erase.className = 'chosung-key erase';
+  erase.textContent = '⌫ 지우기';
+  erase.onclick = eraseChosung;
+  kb.appendChild(erase);
+}
+
+function renderChosungSlots(word) {
+  const container = $('#chosung-slots');
+  const target = getChosung(word);
+  state.game.targetChosung = target;
+  state.game.currentInput = [];
+
+  container.innerHTML = '';
+  for (let i = 0; i < target.length; i++) {
+    const slot = document.createElement('div');
+    slot.className = 'chosung-slot';
+    container.appendChild(slot);
+  }
+}
+
+function updateSlots() {
+  const slots = $$('#chosung-slots .chosung-slot');
+  slots.forEach((slot, i) => {
+    slot.classList.remove('filled', 'correct', 'wrong');
+    const ch = state.game.currentInput[i];
+    slot.textContent = ch || '';
+    if (ch) slot.classList.add('filled');
+  });
+}
+
+function pressChosung(ch) {
+  if (state.game.revealed) return;
+  const target = state.game.targetChosung;
+  if (!target) return;
+  if (state.game.currentInput.length >= target.length) return;
+  state.game.currentInput.push(ch);
+  updateSlots();
+  if (state.game.currentInput.length === target.length) {
+    checkChosungInput();
+  }
+}
+
+function eraseChosung() {
+  if (state.game.revealed) return;
+  if (state.game.currentInput.length === 0) return;
+  state.game.currentInput.pop();
+  updateSlots();
+}
+
+function checkChosungInput() {
+  const user = state.game.currentInput.join('');
+  const target = state.game.targetChosung;
+  const correct = user === target;
+
+  const slots = $$('#chosung-slots .chosung-slot');
+  slots.forEach((slot, i) => {
+    slot.classList.remove('filled');
+    if (state.game.currentInput[i] === target[i]) {
+      slot.classList.add('correct');
+    } else {
+      slot.classList.add('wrong');
+    }
+  });
+
+  state.game.revealed = true;
+  stopTimer();
+
+  const q = state.game.questions[state.game.currentIdx];
+  const wordEl = $('#word');
+  wordEl.textContent = q.word;
+  wordEl.classList.add('revealed');
+
+  if (correct) {
+    state.game.score++;
+    $('#score').textContent = state.game.score;
+    playCorrect();
+  } else {
+    state.game.wrongAnswers.push({ ...q, reason: 'wrong' });
+    playIncorrect();
+  }
+
+  if (state.settings.ttsEnabled) speak(q.word);
+  setTimeout(advance, correct ? INPUT_CORRECT_DELAY : INPUT_WRONG_DELAY);
 }

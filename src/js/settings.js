@@ -126,6 +126,10 @@ function renderToggles() {
   // 이미지 모드 토글
   const imgToggle = $('#toggle-image');
   imgToggle.classList.toggle('on', state.settings.imageMode);
+
+  // 입력 모드 토글
+  const inputToggle = $('#toggle-input');
+  inputToggle.classList.toggle('on', state.settings.inputMode);
 }
 
 /**
@@ -171,6 +175,7 @@ export function startFromSettings() {
 export function startWithLevel(level) {
   const map = { 1: 'easy', 2: 'medium', 3: 'hard' };
   state.settings.difficulty = map[level];
+  if (level >= 2) state.settings.inputMode = true;
   goTo('play-screen');
   startGame();
 }

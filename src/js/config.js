@@ -16,6 +16,7 @@ export const DEFAULT_SETTINGS = {
   timerSeconds: 0,       // 0 | 5 | 10 | 15
   ttsEnabled: true,
   imageMode: false,
+  inputMode: false,      // 초성 버튼으로 직접 입력 (레벨 2/3 진입 시 자동 ON)
 };
 
 export const DIFFICULTY_OPTIONS = [

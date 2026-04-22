@@ -6,7 +6,7 @@
 
 import { loadSettings } from './storage.js';
 import { renderSettings, toggleSetting, resetSettings, startFromSettings, startWithLevel } from './settings.js';
-import { startGame, revealAnswer, markAnswer, speakCurrent, toggleReview, quitGame } from './game.js';
+import { startGame, revealAnswer, markAnswer, speakCurrent, toggleReview, quitGame, renderChosungKeyboard } from './game.js';
 import { goTo } from './ui.js';
 
 // HTML의 onclick="..."에서 호출할 수 있게 전역으로 노출
@@ -25,3 +25,4 @@ window.quitGame          = quitGame;
 // 초기화
 loadSettings();
 renderSettings();
+renderChosungKeyboard();

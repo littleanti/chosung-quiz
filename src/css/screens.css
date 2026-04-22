@@ -341,6 +341,98 @@
   flex-wrap: wrap;
 }
 
+/* ========== 초성 입력 모드 ========== */
+.chosung-input-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 1rem;
+}
+
+.chosung-slots {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.chosung-slot {
+  width: 56px;
+  height: 68px;
+  border: 3px solid var(--navy);
+  border-radius: 14px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Jua', sans-serif;
+  font-size: 2rem;
+  color: var(--navy);
+  box-shadow: 0 3px 0 var(--navy);
+  transition: background 0.15s, transform 0.15s;
+}
+
+.chosung-slot.filled {
+  background: var(--yellow);
+  animation: slotPop 0.25s ease;
+}
+
+.chosung-slot.correct {
+  background: var(--mint);
+  color: white;
+}
+
+.chosung-slot.wrong {
+  background: var(--red);
+  color: white;
+  animation: shake 0.4s ease;
+}
+
+@keyframes slotPop {
+  0%   { transform: scale(0.8); }
+  60%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-6px); }
+  75%      { transform: translateX(6px); }
+}
+
+.chosung-keyboard {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  width: 100%;
+  max-width: 420px;
+}
+
+.chosung-key {
+  aspect-ratio: 1;
+  border: 2px solid var(--navy);
+  border-radius: 12px;
+  background: white;
+  font-family: 'Jua', sans-serif;
+  font-size: 1.3rem;
+  color: var(--navy);
+  cursor: pointer;
+  box-shadow: 0 3px 0 var(--navy);
+  transition: transform 0.08s, box-shadow 0.08s;
+  padding: 0;
+}
+.chosung-key:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--navy);
+}
+.chosung-key.erase {
+  background: var(--cream);
+  grid-column: span 2;
+  aspect-ratio: auto;
+  font-size: 1rem;
+}
+
 /* ========== 종료 화면 ========== */
 .end-screen {
   text-align: center;
