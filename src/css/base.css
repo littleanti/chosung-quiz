@@ -1,0 +1,48 @@
+/* ==========================================
+   리셋 & 레이아웃
+   ========================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Gowun Dodum', sans-serif;
+  background: var(--cream);
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(255, 181, 181, 0.3) 0%, transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(107, 202, 184, 0.25) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(255, 209, 102, 0.15) 0%, transparent 55%);
+  min-height: 100vh;
+  color: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.container {
+  width: 100%;
+  max-width: 500px;
+}
+
+.screen {
+  display: none;
+  animation: fadeIn 0.4s ease;
+}
+
+.screen.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
