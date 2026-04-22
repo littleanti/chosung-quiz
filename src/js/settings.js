@@ -171,6 +171,7 @@ export function startFromSettings() {
 export function startWithLevel(level) {
   const map = { 1: 'easy', 2: 'medium', 3: 'hard' };
   state.settings.difficulty = map[level];
+  if (level === 1) state.settings.imageMode = true;
   goTo('play-screen');
   startGame();
 }

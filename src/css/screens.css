@@ -80,6 +80,14 @@
   display: block;
 }
 
+.level-btn .age-hint {
+  font-size: 0.62rem;
+  opacity: 0.7;
+  font-family: 'Gowun Dodum', sans-serif;
+  display: block;
+  margin-top: 1px;
+}
+
 .level-btn-1 { background: var(--mint);   box-shadow: 0 5px 0 var(--mint-dark); }
 .level-btn-1:active { box-shadow: 0 1px 0 var(--mint-dark); }
 .level-btn-2 { background: var(--yellow); box-shadow: 0 5px 0 var(--yellow-dark); color: var(--navy); }
