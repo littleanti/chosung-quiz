@@ -3,7 +3,7 @@
  */
 
 import {
-  DIFFICULTY_OPTIONS, COUNT_OPTIONS, TIMER_OPTIONS
+  DIFFICULTY_OPTIONS, COUNT_OPTIONS, TIMER_OPTIONS, LEVEL_DEFAULTS
 } from './config.js';
 import { state, resetSettingsToDefault } from './state.js';
 import { saveSettings } from './storage.js';
@@ -69,6 +69,7 @@ function renderDifficulty() {
     chip.textContent = d.label;
     chip.onclick = () => {
       state.settings.difficulty = d.key;
+      state.userOverrides.difficulty = d.key;
       saveSettings();
       renderSettings();
     };
@@ -143,7 +144,7 @@ export function toggleSetting(key, el) {
   if (key === 'ttsEnabled' && !TTS_AVAILABLE) return;
   state.settings[key] = !state.settings[key];
   el.classList.toggle('on', state.settings[key]);
-  if (key === 'inputMode') state.settings.inputModeUserSet = true;
+  state.userOverrides[key] = state.settings[key];
   saveSettings();
 }
 
@@ -178,9 +179,10 @@ export function startFromSettings() {
  * 레벨 버튼 (1/2/3) 클릭 — 단어 길이 기반 난이도 설정 후 바로 시작
  */
 export function startWithLevel(level) {
-  const map = { 1: 'easy', 2: 'medium', 3: 'hard' };
-  state.settings.difficulty = map[level];
-  if (!state.settings.inputModeUserSet) state.settings.inputMode = level >= 2;
+  const levelDefs = LEVEL_DEFAULTS[level];
+  for (const [key, val] of Object.entries(levelDefs)) {
+    state.settings[key] = (key in state.userOverrides) ? state.userOverrides[key] : val;
+  }
   goTo('play-screen');
   startGame();
 }

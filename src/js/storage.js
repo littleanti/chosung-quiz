@@ -13,6 +13,7 @@ export function saveSettings() {
     const toSave = {
       ...state.settings,
       categories: [...state.settings.categories],
+      _userOverrides: state.userOverrides,
     };
     saveCurrentProfileSettings(toSave);
   } catch (e) {
@@ -24,13 +25,15 @@ export function loadSettings() {
   try {
     const parsed = getCurrentProfileSettings();
     if (!parsed) return;
+    const { _userOverrides, ...settingsData } = parsed;
     state.settings = {
       ...DEFAULT_SETTINGS,
-      ...parsed,
+      ...settingsData,
       categories: new Set(
-        parsed.categories && parsed.categories.length ? parsed.categories : CATEGORIES
+        settingsData.categories && settingsData.categories.length ? settingsData.categories : CATEGORIES
       ),
     };
+    state.userOverrides = _userOverrides || {};
   } catch (e) {
     /* 무시 */
   }
