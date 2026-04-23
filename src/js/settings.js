@@ -143,6 +143,7 @@ export function toggleSetting(key, el) {
   if (key === 'ttsEnabled' && !TTS_AVAILABLE) return;
   state.settings[key] = !state.settings[key];
   el.classList.toggle('on', state.settings[key]);
+  if (key === 'inputMode') state.settings.inputModeUserSet = true;
   saveSettings();
 }
 
@@ -179,7 +180,7 @@ export function startFromSettings() {
 export function startWithLevel(level) {
   const map = { 1: 'easy', 2: 'medium', 3: 'hard' };
   state.settings.difficulty = map[level];
-  state.settings.inputMode = level >= 2;
+  if (!state.settings.inputModeUserSet) state.settings.inputMode = level >= 2;
   goTo('play-screen');
   startGame();
 }

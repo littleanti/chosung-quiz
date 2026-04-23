@@ -17,6 +17,7 @@ export const DEFAULT_SETTINGS = {
   ttsEnabled: true,
   imageMode: false,
   inputMode: false,      // 초성 버튼으로 직접 입력 (레벨 2/3 진입 시 자동 ON)
+  inputModeUserSet: false, // 유저가 설정 화면에서 명시적으로 inputMode를 변경했는지 여부
   hintEnabled: true,    // 게임 중 힌트 버튼 표시
 };
 
