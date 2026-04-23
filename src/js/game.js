@@ -113,7 +113,7 @@ export function loadQuestion() {
   }
 
   // 힌트 버튼
-  $('#hint-row').style.display = state.settings.hintEnabled ? 'flex' : 'none';
+  $('#hint-btn-card').style.display = state.settings.hintEnabled ? 'block' : 'none';
 
   // 진행바
   const pct = (state.game.currentIdx / state.game.questions.length) * 100;
@@ -172,7 +172,7 @@ export function revealAnswer(timedOut) {
   wordEl.classList.add('revealed');
 
   $('#check-row').style.display = 'none';
-  $('#hint-row').style.display = 'none';
+  $('#hint-btn-card').style.display = 'none';
   $('#syllable-input-area').style.display = 'none';
 
   if (timedOut) {
@@ -472,7 +472,7 @@ function checkSyllableInput() {
 
   state.game.revealed = true;
   stopTimer();
-  $('#hint-row').style.display = 'none';
+  $('#hint-btn-card').style.display = 'none';
 
   const q = state.game.questions[state.game.currentIdx];
   const wordEl = $('#word');

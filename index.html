@@ -130,6 +130,7 @@
 
     <div class="question-card">
       <button class="tts-button" id="tts-btn" onclick="speakCurrent()" style="display:none;">🔊</button>
+      <button class="hint-button" id="hint-btn-card" onclick="useHint()" style="display:none;">💡</button>
       <span class="category-tag" id="category">과일</span>
       <div class="visual-area" id="visual-area">
         <span class="emoji-display" id="emoji">🍎</span>
@@ -143,9 +144,6 @@
       <button class="syllable-erase" id="syllable-erase" type="button">⌫ 지우기</button>
     </div>
 
-    <div class="button-row" id="hint-row" style="display:none;">
-      <button class="btn ghost small" onclick="useHint()">💡 힌트</button>
-    </div>
     <div class="button-row" id="check-row">
       <button class="btn big" onclick="revealAnswer(false)">정답 확인 ✨</button>
     </div>
