@@ -179,7 +179,7 @@ export function startFromSettings() {
 export function startWithLevel(level) {
   const map = { 1: 'easy', 2: 'medium', 3: 'hard' };
   state.settings.difficulty = map[level];
-  if (level >= 2) state.settings.inputMode = true;
+  state.settings.inputMode = level >= 2;
   goTo('play-screen');
   startGame();
 }
