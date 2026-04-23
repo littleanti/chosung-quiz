@@ -78,6 +78,7 @@ function pickQuestions(pool, needed, lastWords) {
  */
 export function loadQuestion() {
   state.game.revealed = false;
+  state.game.hintCount = 0;
   const q = state.game.questions[state.game.currentIdx];
   if (!q) {
     endGame();
@@ -110,6 +111,9 @@ export function loadQuestion() {
     $('#check-row').style.display = 'flex';
     $('#result-row').style.display = 'none';
   }
+
+  // 힌트 버튼
+  $('#hint-row').style.display = state.settings.hintEnabled ? 'flex' : 'none';
 
   // 진행바
   const pct = (state.game.currentIdx / state.game.questions.length) * 100;
@@ -168,6 +172,7 @@ export function revealAnswer(timedOut) {
   wordEl.classList.add('revealed');
 
   $('#check-row').style.display = 'none';
+  $('#hint-row').style.display = 'none';
   $('#syllable-input-area').style.display = 'none';
 
   if (timedOut) {
@@ -300,6 +305,53 @@ export function toggleReview() {
 }
 
 /* =========================================================
+ * 힌트
+ * ========================================================= */
+
+function buildHintWord(word, hintCount) {
+  let display = '';
+  let sylIdx = 0;
+  for (const ch of word) {
+    if (isHangulSyllable(ch)) {
+      display += sylIdx < hintCount ? ch : getChosung(ch);
+      sylIdx++;
+    } else {
+      display += ch;
+    }
+  }
+  return display;
+}
+
+export function useHint() {
+  if (state.game.revealed) return;
+  const q = state.game.questions[state.game.currentIdx];
+  if (!q) return;
+  const syllables = extractSyllables(q.word);
+
+  if (state.settings.inputMode) {
+    const nextIdx = state.game.currentInput.length;
+    if (nextIdx >= syllables.length) return;
+    const targetCh = syllables[nextIdx];
+    const poolBtns = [...$$('#syllable-pool .syllable-btn')];
+    const btn = poolBtns.find(b => b.textContent === targetCh && !b.classList.contains('used'));
+    if (!btn) return;
+    btn.classList.add('used', 'hint-used');
+    state.game.currentInput.push({ ch: targetCh, btn });
+    updateSyllableSlots();
+    if (state.game.currentInput.length === syllables.length) {
+      setTimeout(checkSyllableInput, 300);
+    }
+  } else {
+    state.game.hintCount = (state.game.hintCount || 0) + 1;
+    if (state.game.hintCount >= syllables.length) {
+      revealAnswer(false);
+      return;
+    }
+    $('#word').textContent = buildHintWord(q.word, state.game.hintCount);
+  }
+}
+
+/* =========================================================
  * 글자 선택 모드
  * ========================================================= */
 
@@ -420,6 +472,7 @@ function checkSyllableInput() {
 
   state.game.revealed = true;
   stopTimer();
+  $('#hint-row').style.display = 'none';
 
   const q = state.game.questions[state.game.currentIdx];
   const wordEl = $('#word');

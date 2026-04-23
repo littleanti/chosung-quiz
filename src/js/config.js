@@ -17,6 +17,7 @@ export const DEFAULT_SETTINGS = {
   ttsEnabled: true,
   imageMode: false,
   inputMode: false,      // 초성 버튼으로 직접 입력 (레벨 2/3 진입 시 자동 ON)
+  hintEnabled: false,   // 게임 중 힌트 버튼 표시
 };
 
 export const DIFFICULTY_OPTIONS = [

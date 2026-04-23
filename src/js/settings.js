@@ -130,6 +130,10 @@ function renderToggles() {
   // 입력 모드 토글
   const inputToggle = $('#toggle-input');
   inputToggle.classList.toggle('on', state.settings.inputMode);
+
+  // 힌트 버튼 토글
+  const hintToggle = $('#toggle-hint');
+  hintToggle.classList.toggle('on', state.settings.hintEnabled);
 }
 
 /**

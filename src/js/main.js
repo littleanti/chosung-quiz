@@ -7,7 +7,7 @@
 import { initProfiles } from './profiles.js';
 import { loadSettings } from './storage.js';
 import { renderSettings, toggleSetting, resetSettings, startFromSettings, startWithLevel } from './settings.js';
-import { startGame, revealAnswer, markAnswer, speakCurrent, toggleReview, quitGame } from './game.js';
+import { startGame, revealAnswer, markAnswer, speakCurrent, toggleReview, quitGame, useHint } from './game.js';
 import { goTo } from './ui.js';
 import {
   renderProfileChip, openProfileModal, closeProfileModal, closeProfileModalBg,
@@ -26,6 +26,7 @@ window.toggleReview           = toggleReview;
 window.toggleSetting          = toggleSetting;
 window.resetSettings          = resetSettings;
 window.quitGame               = quitGame;
+window.useHint                = useHint;
 window.openProfileModal       = openProfileModal;
 window.closeProfileModal      = closeProfileModal;
 window.closeProfileModalBg    = closeProfileModalBg;

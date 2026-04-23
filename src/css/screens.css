@@ -432,6 +432,11 @@
   box-shadow: none;
   transform: translateY(2px);
 }
+.syllable-btn.used.hint-used {
+  background: var(--yellow);
+  opacity: 0.45;
+  border-color: var(--yellow-dark);
+}
 
 .syllable-erase {
   background: var(--cream);
