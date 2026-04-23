@@ -179,10 +179,9 @@ export function startFromSettings() {
  * 레벨 버튼 (1/2/3) 클릭 — 단어 길이 기반 난이도 설정 후 바로 시작
  */
 export function startWithLevel(level) {
-  const levelDefs = LEVEL_DEFAULTS[level];
-  for (const [key, val] of Object.entries(levelDefs)) {
-    state.settings[key] = (key in state.userOverrides) ? state.userOverrides[key] : val;
-  }
+  // 레벨 버튼은 항상 레벨 기본값 적용 (userOverrides 무시)
+  // 그 외 설정(카테고리, 문제 수, 타이머 등)은 현재 state.settings 유지
+  Object.assign(state.settings, LEVEL_DEFAULTS[level]);
   goTo('play-screen');
   startGame();
 }
