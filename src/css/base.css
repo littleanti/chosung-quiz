@@ -21,11 +21,16 @@ body {
     radial-gradient(circle at 85% 80%, rgba(107, 202, 184, 0.25) 0%, transparent 40%),
     radial-gradient(circle at 50% 50%, rgba(255, 209, 102, 0.15) 0%, transparent 55%);
   min-height: 100vh;
+  min-height: 100dvh;            /* 모바일 주소줄 제외한 동적 뷰포트 높이 */
   color: var(--navy);
   display: flex;
-  align-items: center;
+  align-items: safe center;      /* 내용이 viewport보다 크면 위로 잘리지 않게 */
   justify-content: center;
   padding: 20px;
+  padding-top: max(20px, env(safe-area-inset-top));
+  padding-bottom: max(20px, env(safe-area-inset-bottom));
+  padding-left: max(20px, env(safe-area-inset-left));
+  padding-right: max(20px, env(safe-area-inset-right));
 }
 
 .container {

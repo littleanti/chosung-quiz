@@ -1,11 +1,12 @@
 /**
- * 설정 영속화 (localStorage)
- * 저장 실패해도 앱은 정상 동작합니다.
+ * 설정 영속화 — 현재 프로필의 settings로 라우팅
+ * 실제 저장소 I/O는 profiles.js가 담당
  */
 
-import { STORAGE_KEY, DEFAULT_SETTINGS } from './config.js';
+import { DEFAULT_SETTINGS } from './config.js';
 import { state } from './state.js';
 import { CATEGORIES } from '../data/words.js';
+import { saveCurrentProfileSettings, getCurrentProfileSettings } from './profiles.js';
 
 export function saveSettings() {
   try {
@@ -13,17 +14,16 @@ export function saveSettings() {
       ...state.settings,
       categories: [...state.settings.categories],
     };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+    saveCurrentProfileSettings(toSave);
   } catch (e) {
-    /* 무시 - private 모드 등에서 저장 실패해도 앱은 작동 */
+    /* 무시 */
   }
 }
 
 export function loadSettings() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return;
-    const parsed = JSON.parse(raw);
+    const parsed = getCurrentProfileSettings();
+    if (!parsed) return;
     state.settings = {
       ...DEFAULT_SETTINGS,
       ...parsed,
@@ -32,6 +32,6 @@ export function loadSettings() {
       ),
     };
   } catch (e) {
-    /* 무시 - 파싱 실패 시 기본값 사용 */
+    /* 무시 */
   }
 }

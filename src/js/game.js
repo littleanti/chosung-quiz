@@ -3,7 +3,7 @@
  * - 문제 출제, 정답 처리, 종료 화면
  */
 
-import { CHOSUNG, TIMEOUT_REVEAL_DURATION } from './config.js';
+import { TIMEOUT_REVEAL_DURATION } from './config.js';
 import { state, resetGame } from './state.js';
 import { WORDS } from '../data/words.js';
 import { getChosung, shuffle, $, $$ } from './utils.js';
@@ -15,6 +15,8 @@ import { filterWords } from './settings.js';
 
 const INPUT_CORRECT_DELAY = 1200;
 const INPUT_WRONG_DELAY   = 2000;
+const DISTRACTOR_COUNT    = 8;
+const MAX_OVERLAP_RATIO   = 0.20;  // 직전 게임과 중복 허용 한도
 
 /**
  * 게임 시작: 문제 풀 구성 → 첫 문제 로드
@@ -23,20 +25,10 @@ export function startGame() {
   const pool = filterWords(state.settings);
   const needed = state.settings.questionCount;
 
-  let questions;
-  if (pool.length === 0) {
-    // 필터 결과 0개 방어 - 전체 단어로 대체
-    questions = shuffle(WORDS).slice(0, needed);
-  } else if (pool.length >= needed) {
-    questions = shuffle(pool).slice(0, needed);
-  } else {
-    // 부족하면 반복해서 채움
-    const filled = [];
-    while (filled.length < needed) {
-      filled.push(...shuffle(pool));
-    }
-    questions = filled.slice(0, needed);
-  }
+  const questions = pickQuestions(pool, needed, state.lastGameWords);
+
+  // 다음 게임 중복 제한을 위해 이번 회차 단어 기록
+  state.lastGameWords = new Set(questions.map(q => q.word));
 
   resetGame();
   state.game.questions = questions;
@@ -44,6 +36,41 @@ export function startGame() {
   $('#total-num').textContent = questions.length;
   goTo('play-screen');
   loadQuestion();
+}
+
+/**
+ * 풀에서 문제 선별 — 직전 게임과 중복을 최소화 (fresh 우선)
+ * 풀이 충분하면 중복 ≤ 20%가 자연스럽게 성립.
+ * 풀이 부족하면 기존 방식(풀 반복)으로 폴백.
+ */
+function pickQuestions(pool, needed, lastWords) {
+  if (pool.length === 0) {
+    // 필터 결과 0개 방어 - 전체 단어로 대체
+    return shuffle(WORDS).slice(0, needed);
+  }
+  if (pool.length < needed) {
+    // 풀이 needed보다 작음 → 반복해서 채우기 (중복 제한 불가)
+    const filled = [];
+    while (filled.length < needed) {
+      filled.push(...shuffle(pool));
+    }
+    return filled.slice(0, needed);
+  }
+
+  const fresh   = pool.filter(w => !lastWords.has(w.word));
+  const repeats = pool.filter(w =>  lastWords.has(w.word));
+
+  if (fresh.length >= needed) {
+    return shuffle(fresh).slice(0, needed);
+  }
+
+  // fresh 전부 + 모자란 만큼 repeats로 보충
+  // fresh.length 가 needed*0.8 이상이면 중복 ≤ 20% 자동 달성
+  const deficit = needed - fresh.length;
+  return shuffle([
+    ...fresh,
+    ...shuffle(repeats).slice(0, deficit),
+  ]);
 }
 
 /**
@@ -74,12 +101,12 @@ export function loadQuestion() {
 
   // 입력 모드 분기
   if (state.settings.inputMode) {
-    $('#chosung-input-area').style.display = 'flex';
+    $('#syllable-input-area').style.display = 'flex';
     $('#check-row').style.display = 'none';
     $('#result-row').style.display = 'none';
-    renderChosungSlots(q.word);
+    renderSyllableMode(q.word);
   } else {
-    $('#chosung-input-area').style.display = 'none';
+    $('#syllable-input-area').style.display = 'none';
     $('#check-row').style.display = 'flex';
     $('#result-row').style.display = 'none';
   }
@@ -141,7 +168,7 @@ export function revealAnswer(timedOut) {
   wordEl.classList.add('revealed');
 
   $('#check-row').style.display = 'none';
-  $('#chosung-input-area').style.display = 'none';
+  $('#syllable-input-area').style.display = 'none';
 
   if (timedOut) {
     // 시간 초과: 오답 처리 후 잠시 보여주고 자동 이동
@@ -273,86 +300,122 @@ export function toggleReview() {
 }
 
 /* =========================================================
- * 초성 입력 모드
+ * 글자 선택 모드
  * ========================================================= */
 
-/**
- * 키보드(자음 19개 + 지우기)를 한 번 렌더링 — main.js 초기화 시 호출
- */
-export function renderChosungKeyboard() {
-  const kb = $('#chosung-keyboard');
-  if (!kb) return;
-  kb.innerHTML = '';
-  CHOSUNG.forEach(c => {
-    const btn = document.createElement('button');
-    btn.className = 'chosung-key';
-    btn.textContent = c;
-    btn.onclick = () => pressChosung(c);
-    kb.appendChild(btn);
-  });
-  const erase = document.createElement('button');
-  erase.className = 'chosung-key erase';
-  erase.textContent = '⌫ 지우기';
-  erase.onclick = eraseChosung;
-  kb.appendChild(erase);
+function isHangulSyllable(ch) {
+  const code = ch.charCodeAt(0);
+  return code >= 0xAC00 && code <= 0xD7A3;
 }
 
-function renderChosungSlots(word) {
-  const container = $('#chosung-slots');
-  const target = getChosung(word);
-  state.game.targetChosung = target;
+function extractSyllables(word) {
+  const result = [];
+  for (const ch of word) {
+    if (isHangulSyllable(ch)) result.push(ch);
+  }
+  return result;
+}
+
+let _allSyllablesCache = null;
+function getAllSyllables() {
+  if (_allSyllablesCache) return _allSyllablesCache;
+  const set = new Set();
+  WORDS.forEach(w => {
+    for (const ch of w.word) {
+      if (isHangulSyllable(ch)) set.add(ch);
+    }
+  });
+  _allSyllablesCache = [...set];
+  return _allSyllablesCache;
+}
+
+function buildSyllablePool(answerWord) {
+  const answer = extractSyllables(answerWord);
+  const answerSet = new Set(answer);
+  const distractorPool = getAllSyllables().filter(s => !answerSet.has(s));
+  const distractors = shuffle(distractorPool).slice(0, DISTRACTOR_COUNT);
+  return shuffle([...answer, ...distractors]);
+}
+
+/**
+ * 글자 선택 모드 UI 렌더링 (슬롯 + 글자 풀)
+ */
+function renderSyllableMode(word) {
+  const target = extractSyllables(word);
+  state.game.targetSyllables = target;
   state.game.currentInput = [];
 
-  container.innerHTML = '';
+  // 슬롯
+  const slots = $('#syllable-slots');
+  slots.innerHTML = '';
   for (let i = 0; i < target.length; i++) {
     const slot = document.createElement('div');
-    slot.className = 'chosung-slot';
-    container.appendChild(slot);
+    slot.className = 'syllable-slot';
+    slots.appendChild(slot);
   }
+
+  // 글자 풀
+  const pool = $('#syllable-pool');
+  pool.innerHTML = '';
+  const syllables = buildSyllablePool(word);
+  syllables.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'syllable-btn';
+    btn.type = 'button';
+    btn.textContent = s;
+    btn.onclick = () => pressSyllable(s, btn);
+    pool.appendChild(btn);
+  });
+
+  // 지우기 버튼
+  const erase = $('#syllable-erase');
+  erase.onclick = eraseSyllable;
+  erase.disabled = true;
 }
 
-function updateSlots() {
-  const slots = $$('#chosung-slots .chosung-slot');
+function updateSyllableSlots() {
+  const slots = $$('#syllable-slots .syllable-slot');
   slots.forEach((slot, i) => {
     slot.classList.remove('filled', 'correct', 'wrong');
-    const ch = state.game.currentInput[i];
-    slot.textContent = ch || '';
-    if (ch) slot.classList.add('filled');
+    const item = state.game.currentInput[i];
+    slot.textContent = item ? item.ch : '';
+    if (item) slot.classList.add('filled');
   });
+  $('#syllable-erase').disabled = state.game.currentInput.length === 0;
 }
 
-function pressChosung(ch) {
+function pressSyllable(ch, btnEl) {
   if (state.game.revealed) return;
-  const target = state.game.targetChosung;
+  const target = state.game.targetSyllables;
   if (!target) return;
   if (state.game.currentInput.length >= target.length) return;
-  state.game.currentInput.push(ch);
-  updateSlots();
+  if (btnEl.classList.contains('used')) return;
+
+  btnEl.classList.add('used');
+  state.game.currentInput.push({ ch, btn: btnEl });
+  updateSyllableSlots();
+
   if (state.game.currentInput.length === target.length) {
-    checkChosungInput();
+    checkSyllableInput();
   }
 }
 
-function eraseChosung() {
+function eraseSyllable() {
   if (state.game.revealed) return;
-  if (state.game.currentInput.length === 0) return;
-  state.game.currentInput.pop();
-  updateSlots();
+  const last = state.game.currentInput.pop();
+  if (last) last.btn.classList.remove('used');
+  updateSyllableSlots();
 }
 
-function checkChosungInput() {
-  const user = state.game.currentInput.join('');
-  const target = state.game.targetChosung;
-  const correct = user === target;
+function checkSyllableInput() {
+  const target = state.game.targetSyllables;
+  const user = state.game.currentInput.map(x => x.ch);
+  const correct = user.every((ch, i) => ch === target[i]);
 
-  const slots = $$('#chosung-slots .chosung-slot');
+  const slots = $$('#syllable-slots .syllable-slot');
   slots.forEach((slot, i) => {
     slot.classList.remove('filled');
-    if (state.game.currentInput[i] === target[i]) {
-      slot.classList.add('correct');
-    } else {
-      slot.classList.add('wrong');
-    }
+    slot.classList.add(user[i] === target[i] ? 'correct' : 'wrong');
   });
 
   state.game.revealed = true;

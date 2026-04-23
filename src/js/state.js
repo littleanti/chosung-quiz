@@ -24,6 +24,8 @@ export const state = {
     timerHandle: null,
     timeLeft: 0,
   },
+  // 직전 게임에 사용된 단어(word 문자열 Set) — 연속 플레이 시 중복 제한용
+  lastGameWords: new Set(),
 };
 
 export function resetSettingsToDefault() {
