@@ -20,11 +20,11 @@ export const DEFAULT_SETTINGS = {
   hintEnabled: true,    // 게임 중 힌트 버튼 표시
 };
 
-// 레벨 버튼별 기본 설정 — startWithLevel에서 userOverrides가 없는 키에만 적용
+// 레벨 버튼별 기본 설정 — difficulty만 덮어쓰고 나머지는 유저 설정 유지
 export const LEVEL_DEFAULTS = {
-  1: { difficulty: 'easy',   inputMode: false },
-  2: { difficulty: 'medium', inputMode: true  },
-  3: { difficulty: 'hard',   inputMode: true  },
+  1: { difficulty: 'easy'   },
+  2: { difficulty: 'medium' },
+  3: { difficulty: 'hard'   },
 };
 
 export const DIFFICULTY_OPTIONS = [

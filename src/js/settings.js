@@ -158,6 +158,14 @@ export function resetSettings() {
 }
 
 /**
+ * 설정 화면 열기 — goTo + renderSettings 를 항상 함께 실행
+ */
+export function openSettings() {
+  goTo('settings-screen');
+  renderSettings();
+}
+
+/**
  * "시작하기" 버튼
  * - 유효성 검사 후 게임 시작
  */

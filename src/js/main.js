@@ -6,7 +6,7 @@
 
 import { initProfiles } from './profiles.js';
 import { loadSettings } from './storage.js';
-import { renderSettings, toggleSetting, resetSettings, startFromSettings, startWithLevel } from './settings.js';
+import { renderSettings, openSettings, toggleSetting, resetSettings, startFromSettings, startWithLevel } from './settings.js';
 import { startGame, revealAnswer, markAnswer, speakCurrent, toggleReview, quitGame, useHint } from './game.js';
 import { goTo } from './ui.js';
 import {
@@ -16,6 +16,7 @@ import {
 
 // HTML의 onclick="..."에서 호출할 수 있게 전역으로 노출
 window.goTo                   = goTo;
+window.openSettings           = openSettings;
 window.startGame              = startGame;
 window.startFromSettings      = startFromSettings;
 window.startWithLevel         = startWithLevel;
