@@ -10,7 +10,7 @@
 | File | Description |
 |------|-------------|
 | `index.html` | 앱 전체 HTML — 4개 화면(start/settings/play/end)이 단일 파일에 존재 |
-| `package.json` | dev 서버 스크립트만 정의 (`npm run dev` → npx serve :3000) |
+| `package.json` | dev 서버 스크립트만 정의 (`npm run dev` → npx serve :3001) |
 | `favicon.svg` | SVG 파비콘 |
 | `CLAUDE.md` | Claude Code용 프로젝트 가이드 (아키텍처, 명령어, 구현 노트) |
 | `README.md` | 프로젝트 소개 |
