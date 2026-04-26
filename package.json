@@ -5,9 +5,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "npx -y serve . -l 3000",
-    "start": "npx -y serve . -l 3000",
-    "live": "npx -y live-server --port=3000 --no-browser"
+    "dev": "npx -y serve . -l 3001",
+    "start": "npx -y serve . -l 3001",
+    "live": "npx -y live-server --port=3001 --no-browser"
   },
   "keywords": [
     "korean",

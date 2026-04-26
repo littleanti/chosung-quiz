@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 # Run local dev server (required — ES Modules won't work via file://)
-npm run dev        # http://localhost:3000 via npx serve
+npm run dev        # http://localhost:3001 via npx serve
 npm run live       # live-server with auto-reload
 
 # No build step, no install needed (zero npm dependencies at runtime)
