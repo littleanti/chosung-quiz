@@ -22,6 +22,7 @@
 }
 
 .start-screen .subtitle {
+  font-family: 'Jua', sans-serif;
   font-size: clamp(0.9rem, 3vw, 1.2rem);
   color: var(--color-text-dim);
 }
@@ -38,6 +39,7 @@
 }
 
 .level-label {
+  font-family: 'Jua', sans-serif;
   font-size: 1rem;
   color: var(--color-text-dim);
   margin-bottom: -8px;
@@ -93,6 +95,7 @@
 .level-btn-4:active { box-shadow: 0 1px 0 var(--navy-dark); }
 
 .btn-settings {
+  font-family: 'Jua', sans-serif;
   font-size: 1rem;
   font-weight: 600;
   color: var(--color-text-dim);
