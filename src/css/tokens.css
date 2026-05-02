@@ -21,10 +21,10 @@
   /* 그림자 */
   --shadow: rgba(45, 48, 71, 0.15);
 
-  /* 크로스-게임 공통 시맨틱 토큰 */
+  /* 크로스-게임 공통 시맨틱 토큰 (2_syllable_assembly와 동일) */
   --color-text: var(--navy);
-  --color-text-dim: rgba(45, 48, 71, 0.6);
-  --color-surface: var(--cream);
-  --color-surface2: var(--gray);
-  --color-border: rgba(45, 48, 71, 0.25);
+  --color-text-dim: #6b6e82;
+  --color-surface: #FFFFFF;
+  --color-surface2: #F5EDD8;
+  --color-border: var(--gray);
 }
