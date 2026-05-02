@@ -20,4 +20,11 @@
 
   /* 그림자 */
   --shadow: rgba(45, 48, 71, 0.15);
+
+  /* 크로스-게임 공통 시맨틱 토큰 */
+  --color-text: var(--navy);
+  --color-text-dim: rgba(45, 48, 71, 0.6);
+  --color-surface: var(--cream);
+  --color-surface2: var(--gray);
+  --color-border: rgba(45, 48, 71, 0.25);
 }
