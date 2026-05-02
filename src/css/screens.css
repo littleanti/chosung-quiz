@@ -52,6 +52,7 @@
 
 .level-buttons {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
   margin-bottom: 14px;
@@ -94,6 +95,8 @@
 .level-btn-2:active { box-shadow: 0 1px 0 var(--yellow-dark); }
 .level-btn-3 { background: var(--coral);  box-shadow: 0 5px 0 var(--coral-dark); }
 .level-btn-3:active { box-shadow: 0 1px 0 var(--coral-dark); }
+.level-btn-4 { background: var(--navy);   box-shadow: 0 5px 0 var(--navy-dark); color: white; }
+.level-btn-4:active { box-shadow: 0 1px 0 var(--navy-dark); }
 
 /* ========== 설정 화면 ========== */
 .settings-screen { padding: 10px 0 20px; }

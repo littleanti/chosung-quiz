@@ -25,6 +25,7 @@ export const LEVEL_DEFAULTS = {
   1: { difficulty: 'easy'   },
   2: { difficulty: 'medium' },
   3: { difficulty: 'hard'   },
+  4: { difficulty: 'all'    },
 };
 
 export const DIFFICULTY_OPTIONS = [
