@@ -125,16 +125,6 @@ export function loadQuestion() {
   } else {
     hideTimer();
   }
-
-  // 문제 진입 시 자동 TTS (300ms 후)
-  if (TTS_AVAILABLE && state.settings.ttsEnabled) {
-    const autoSpeakIdx = state.game.currentIdx;
-    setTimeout(() => {
-      if (state.game.currentIdx === autoSpeakIdx && !state.game.revealed) {
-        speak(q.word);
-      }
-    }, 300);
-  }
 }
 
 /**
