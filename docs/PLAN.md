@@ -58,6 +58,17 @@
 - [x] JS 모듈 분리 (config/state/storage/utils/tts/timer/ui/settings/game/main)
 - [x] VSCode 설정 + 문서화
 
+## ✅ v2.1 — 사운드 + 프로필 (완료)
+
+### Phase 8 — 사운드 & 프로필 시스템
+- [x] `sound.js` — Web Audio API 오실레이터 기반 효과음 (외부 파일 불필요)
+  - 정답: C5→E5→G5 삼화음 아르페지오 (`playCorrect`)
+  - 오답: G3→D3 하강 톤 (`playIncorrect`)
+- [x] `profiles.js` — 사용자 프로필 관리 (`chosung-quiz-profiles-v1` 키)
+  - 최대 8개 프로필, emoji 아바타 선택, 프로필별 독립 설정
+  - 기존 v2 단일 설정 → "게스트" 프로필 자동 마이그레이션
+- [x] `profile-ui.js` — 프로필 선택·생성 UI 렌더링
+
 ## 🚧 v3 — 다음 로드맵 (아이디어)
 
 ### P1 후보
@@ -106,7 +117,12 @@ main              # 배포 가능한 안정 버전
 
 ## 📝 릴리즈 노트
 
-### v2.0.0 (현재)
+### v2.1.0 (현재)
+- Web Audio API 정답/오답 효과음 (`sound.js`) — 외부 오디오 파일 없이 오실레이터로 생성
+- 다중 프로필 시스템 (`profiles.js`, `profile-ui.js`) — 최대 8개, emoji 아바타, 프로필별 독립 설정
+- 기존 v2 단일 설정 → "게스트" 프로필 자동 마이그레이션
+
+### v2.0.0
 - 설정 화면 추가 (카테고리/난이도/문제수/타이머/TTS/이미지)
 - TTS 발음 듣기
 - 타이머 모드

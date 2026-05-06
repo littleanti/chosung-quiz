@@ -1,7 +1,7 @@
 # 📋 PRD — 초성 퀴즈 v2
 
 > Product Requirements Document
-> Last updated: 2026-04
+> Last updated: 2026-05-05
 
 ## 1. 제품 개요
 
@@ -61,6 +61,13 @@
 | F13 | 사진 모드 | 이모지 대신 실제 이미지 표시 |
 | F14 | 틀린 문제 복습 | 종료 화면에서 오답 리스트 + TTS |
 | F15 | 설정 저장 | localStorage로 마지막 설정 유지 |
+
+### 추가 구현 (v2.1, 완료)
+| ID | 기능 | 설명 |
+|---|---|---|
+| F16 | 효과음 | Web Audio API 오실레이터 기반 정답(`playCorrect`) / 오답(`playIncorrect`) 톤 |
+| F17 | 다중 프로필 | 최대 8개 프로필, emoji 아바타, 프로필별 독립 설정 저장 (`profiles.js`) |
+| F18 | 프로필 UI | 프로필 선택·생성 화면 (`profile-ui.js`), 기존 v2 설정 자동 마이그레이션 |
 
 ### P2 (향후)
 - 타이핑 모드 (직접 입력)

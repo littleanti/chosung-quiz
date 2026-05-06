@@ -1,4 +1,4 @@
-<!-- Generated: 2026-04-25 | Updated: 2026-04-25 -->
+<!-- Generated: 2026-04-25 | Updated: 2026-05-05 -->
 
 # chosung-quiz
 
@@ -14,6 +14,25 @@
 | `favicon.svg` | SVG 파비콘 |
 | `CLAUDE.md` | Claude Code용 프로젝트 가이드 (아키텍처, 명령어, 구현 노트) |
 | `README.md` | 프로젝트 소개 |
+
+### Key JS Modules (`src/js/`)
+
+| Module | 역할 |
+|--------|------|
+| `config.js` | 순수 상수 (DEFAULT_SETTINGS, STORAGE_KEY 등) |
+| `words.js` | 단어 데이터 + CATEGORIES (순수 데이터, import 없음) |
+| `utils.js` | chosung 추출 등 범용 유틸 |
+| `state.js` | 단일 전역 state 싱글톤 |
+| `storage.js` | localStorage 영속화 (`loadSettings` / `saveSettings`) |
+| `tts.js` | Web Speech API TTS 래퍼 |
+| `timer.js` | setInterval 기반 카운트다운 타이머 |
+| `sound.js` | Web Audio API 정답/오답 효과음 (오실레이터, 외부 파일 불필요) |
+| `profiles.js` | 사용자 프로필 관리 — 최대 8개, `chosung-quiz-profiles-v1` 키 |
+| `profile-ui.js` | 프로필 선택·생성 UI 렌더링 |
+| `ui.js` | 화면 전환 (`goTo`), TTS/타이머 정지 통합 |
+| `settings.js` | 설정 화면 로직 (`filterWords` 포함) |
+| `game.js` | 게임 루프 — 문제 생성, 채점, 타임아웃 처리 |
+| `main.js` | 진입점 — 모든 모듈 import + `window` 노출 |
 
 ## Subdirectories
 

@@ -228,8 +228,7 @@ export function speakCurrent() {
  */
 export function quitGame() {
   stopTimer();
-  state.game.questions = state.game.questions.slice(0, state.game.currentIdx);
-  endGame();
+  goTo('start-screen');
 }
 
 /**
