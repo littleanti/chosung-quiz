@@ -22,7 +22,8 @@
 
   <!-- =========== 시작 화면 =========== -->
   <div id="start-screen" class="screen active start-screen">
-    <button class="profile-chip" id="profile-chip" onclick="openProfileModal()">
+    <!-- DISABLED: 프로필 기능 — 나중에 재활성화 시 style 제거 -->
+    <button class="profile-chip" id="profile-chip" onclick="openProfileModal()" style="display:none;">
       <span class="profile-chip-emoji" id="profile-chip-emoji">🧒</span>
       <span class="profile-chip-name"  id="profile-chip-name">게스트</span>
       <span class="profile-chip-caret">▼</span>
@@ -184,8 +185,8 @@
 
 </div>
 
-<!-- =========== 프로필 모달 =========== -->
-<div class="modal-overlay" id="profile-modal" style="display:none;" onclick="closeProfileModalBg(event)">
+<!-- =========== 프로필 모달 (DISABLED) =========== -->
+<div class="modal-overlay" id="profile-modal" style="display:none !important;" onclick="closeProfileModalBg(event)">
   <div class="modal">
     <div class="modal-header">
       <h2>👤 프로필</h2>
