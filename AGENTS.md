@@ -71,13 +71,29 @@ settings ──┘    (replay/settings)
 ## Design Reference — 시리즈 공통 UI 기준
 
 본 게임의 홈 화면·설정 화면·게임 완료 화면 디자인은 **7단계 시리즈 전체의 UI 디자인 기준**이다.  
-2 ~ 6단계 게임의 시작·설정·완료 화면은 아래 파일을 기준으로 구현해야 한다.
+2 ~ 6단계 게임의 시작·설정·완료 화면은 아래 파일과 수치를 그대로 사용해야 한다.
 
 | 파일 | 역할 |
 |------|------|
-| `src/css/tokens.css` | CSS 변수 팔레트 (색상·간격·배경 토큰의 진실의 근원) |
-| `src/css/components.css` | 버튼·카드·모달 등 공통 컴포넌트 스타일 |
+| `src/css/tokens.css` | CSS 변수 팔레트 (`--coral #FF7757`, `--navy #2D3047`, `--cream #FFF6E4` 등) |
+| `src/css/components.css` | 버튼·카드·모달 등 공통 컴포넌트 스타일 (`.btn`, `.btn.big`, `.btn.small`) |
+| `src/css/screens.css` | 화면별 스타일 (`.start-screen h1`, `.settings-header h2`, `.end-screen h2`) |
 | `index.html` `<link>` | Google Fonts `Jua`(제목), `Gowun Dodum`(설명·본문) 로드 패턴 |
+
+**핵심 수치 (형제 게임 준수 필수)**:
+
+| 요소 | 규격 |
+|------|------|
+| 시작 화면 제목 | `font-family: 'Jua', sans-serif; font-size: 3rem; letter-spacing: 2px; color: var(--coral)` |
+| 설정 화면 제목 | `font-family: 'Jua', sans-serif; font-size: 1.8rem; color: var(--coral)` |
+| 완료 화면 제목 | `font-family: 'Jua', sans-serif; font-size: 2.1rem; color: var(--coral)` |
+| 설명·본문 | `font-family: 'Gowun Dodum', sans-serif; font-size: clamp(0.9rem, 3vw, 1.2rem)` |
+| 버튼 기본 | `font-family: 'Jua', sans-serif; font-size: 1.2rem; padding: 14px 28px; border-radius: 100px` |
+| 버튼 대형 | `font-size: 1.45rem; padding: 16px 44px; border-radius: 100px` |
+| 버튼 소형 | `font-size: 1rem; padding: 10px 20px; border-radius: 100px` |
+| 버튼 색상 | `background: var(--coral); color: #fff; box-shadow: 0 5px 0 var(--coral-dark)` |
+| 버튼 눌림 | `transform: translateY(4px); box-shadow: 0 1px 0 var(--coral-dark)` |
+| 배경 | `background: var(--cream)` (`#FFF6E4`) |
 
 > 상세 스펙: `docs/TRD.md §10 홈·설정·완료 화면 디자인 시스템` 및 `docs/PLAN.md ##디자인 기준` 참조.
 
