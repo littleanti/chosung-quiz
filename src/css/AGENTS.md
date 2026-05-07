@@ -36,4 +36,8 @@ index.html 로드 순서:
 - 화면 전환: `.screen` 클래스에 `.active`가 추가되면 표시, 제거되면 숨김
 - 타이머 배지: `.warn` / `.danger` 클래스로 색상 변화
 
+### Series Design Reference (시리즈 UI 기준)
+`tokens.css` 와 `components.css` 는 1 ~ 6단계 시리즈 전체의 **시작·설정·완료 화면 UI 기준**이다.  
+형제 게임들이 이 게임의 디자인을 따르므로, 색상 팔레트·버튼 스타일·CSS 변수명을 변경할 때는 시리즈 전체 영향을 반드시 고려할 것.
+
 <!-- MANUAL: -->

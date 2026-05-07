@@ -68,6 +68,19 @@ settings ──┘    (replay/settings)
 - localStorage 영속화는 `src/js/storage.js`에서만 처리
 - 단어 데이터 추가/수정은 `src/data/words.js` 에서만
 
+## Design Reference — 시리즈 공통 UI 기준
+
+본 게임의 홈 화면·설정 화면·게임 완료 화면 디자인은 **7단계 시리즈 전체의 UI 디자인 기준**이다.  
+2 ~ 6단계 게임의 시작·설정·완료 화면은 아래 파일을 기준으로 구현해야 한다.
+
+| 파일 | 역할 |
+|------|------|
+| `src/css/tokens.css` | CSS 변수 팔레트 (색상·간격·배경 토큰의 진실의 근원) |
+| `src/css/components.css` | 버튼·카드·모달 등 공통 컴포넌트 스타일 |
+| `index.html` `<link>` | Google Fonts `Jua`(제목), `Gowun Dodum`(설명·본문) 로드 패턴 |
+
+> 상세 스펙: `docs/TRD.md §10 홈·설정·완료 화면 디자인 시스템` 및 `docs/PLAN.md ##디자인 기준` 참조.
+
 ## Dependencies
 
 ### External

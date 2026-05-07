@@ -222,3 +222,21 @@ if (imageMode && imageUrl) {
 | Cloudflare Pages | 드래그 앤 드롭 |
 
 빌드 단계 불필요 — 루트 디렉터리 그대로 업로드.
+
+## 10. 홈·설정·완료 화면 디자인 시스템 (시리즈 공통 기준)
+
+본 게임(`1_chosung_quiz`)의 홈 화면·설정 화면·게임 완료 화면 디자인은 **7단계 시리즈 전체의 UI 디자인 기준**이다. 2~6단계 게임은 아래 스펙을 준수한다.
+
+| 요소 | 구현 방법 |
+|---|---|
+| 폰트 로드 | `<link>` Google Fonts — `Jua`(제목), `Gowun Dodum`(설명·본문) |
+| CSS 변수 | `src/css/tokens.css` — 색상·간격·배경 토큰의 진실의 근원 |
+| 버튼 컴포넌트 | `src/css/components.css` — `.btn-primary`, `.btn-secondary` 스타일 |
+| 배경 | `--color-bg` 변수 (파스텔 계열 밝은 배경) |
+| 레이아웃 | 수직 중앙 정렬, 카드형 컨테이너 (`start-screen`, `settings-screen`, `end-screen` 클래스) |
+
+**형제 게임이 준수해야 할 사항**:
+- `tokens.css` 의 CSS 변수 팔레트를 복사하거나 동일 값으로 재정의
+- 시작·완료 화면 제목: `font-family: 'Jua', sans-serif`
+- 시작·완료 화면 설명·버튼 레이블: `font-family: 'Gowun Dodum', sans-serif`
+- 큰 라운드 버튼 스타일은 이 게임의 `components.css` 를 참조·복사
