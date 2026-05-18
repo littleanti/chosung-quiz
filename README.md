@@ -31,7 +31,7 @@ ES Modules를 사용하므로 `file://`로 열면 CORS 오류가 납니다. 반�
 **방법 1: npm script (권장)**
 ```bash
 npm run dev
-# → http://localhost:3001
+# → http://localhost:4321
 ```
 
 **방법 2: VSCode Live Server 확장**
@@ -40,12 +40,12 @@ npm run dev
 
 **방법 3: Python 기본 서버**
 ```bash
-python3 -m http.server 3001
+python3 -m http.server 4321
 ```
 
 ### 2. 브라우저에서 열기
 
-- `http://localhost:3001`
+- `http://localhost:4321`
 
 ### 3. 게임 시작
 

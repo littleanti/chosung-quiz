@@ -10,7 +10,7 @@
 | File | Description |
 |------|-------------|
 | `index.html` | 앱 전체 HTML — 4개 화면(start/settings/play/end)이 단일 파일에 존재 |
-| `package.json` | dev 서버 스크립트만 정의 (`npm run dev` → npx serve :3001) |
+| `package.json` | dev 서버 스크립트만 정의 (`npm run dev` → npx serve :4321) |
 | `favicon.svg` | SVG 파비콘 |
 | `CLAUDE.md` | Claude Code용 프로젝트 가이드 (아키텍처, 명령어, 구현 노트) |
 | `README.md` | 프로젝트 소개 |
@@ -60,7 +60,7 @@ settings ──┘    (replay/settings)
 - ES Modules 사용 — 브라우저가 직접 import. `file://`로 열면 CORS 오류 발생하므로 반드시 dev 서버 사용.
 
 ### Testing Requirements
-- `npm run dev` 실행 후 http://localhost:3001 에서 수동 테스트
+- `npm run dev` 실행 후 http://localhost:4321 에서 수동 테스트
 - 자동화 테스트 없음 (docs/TRD.md §8 수동 체크리스트 참조)
 
 ### Common Patterns
