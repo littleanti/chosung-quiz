@@ -16,7 +16,7 @@ export const DEFAULT_SETTINGS = {
   timerSeconds: 0,       // 0 | 5 | 10 | 15
   ttsEnabled: true,
   imageMode: false,
-  inputMode: false,      // 초성 버튼으로 직접 입력 (레벨 2/3 진입 시 자동 ON)
+  inputMode: false,      // 초성 버튼으로 직접 입력
   hintEnabled: true,    // 게임 중 힌트 버튼 표시
 };
 
