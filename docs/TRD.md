@@ -35,8 +35,11 @@ src/
     ├── utils.js          # 순수 유틸
     ├── tts.js            # Web Speech API
     ├── timer.js          # 카운트다운
+    ├── sound.js          # Web Audio API 효과음 (playCorrect/playIncorrect)
     ├── ui.js             # 화면전환 헬퍼
     ├── settings.js       # 설정 화면 렌더링 + 필터링
+    ├── profiles.js       # 다중 프로필 관리 (최대 8개, localStorage)
+    ├── profile-ui.js     # 프로필 선택·생성 UI 렌더링
     └── game.js           # 게임 로직 (출제, 정답, 종료)
 ```
 
@@ -45,7 +48,9 @@ src/
 main.js
   ├─ storage.js ─→ state.js, config.js, words.js
   ├─ settings.js ─→ state.js, storage.js, tts.js, ui.js, game.js, words.js
-  └─ game.js ─→ state.js, utils.js, timer.js, tts.js, ui.js, settings.js
+  ├─ profiles.js ─→ config.js, words.js
+  ├─ profile-ui.js ─→ profiles.js, storage.js
+  └─ game.js ─→ state.js, utils.js, timer.js, tts.js, ui.js, settings.js, sound.js
 
 공통 의존:
   config.js (상수, 최하위)
@@ -66,6 +71,8 @@ state = {
     timerSeconds: 0|5|10|15,      // 0 = 끔
     ttsEnabled: boolean,
     imageMode: boolean,
+    inputMode: boolean,           // 글자 선택 모드 (음절 버튼 탭으로 단어 입력)
+    hintEnabled: boolean,         // 힌트 버튼 표시 여부
   },
   game: {
     questions: Word[],            // 이번 세션 문제들
@@ -75,7 +82,12 @@ state = {
     revealed: boolean,            // 현재 문제가 공개되었나
     timerHandle: IntervalID|null,
     timeLeft: number,             // 초 단위 (소수점 지원)
-  }
+    hintCount: number,            // 현재 문제 힌트 사용 횟수
+    targetSyllables: string[],    // inputMode용: 정답 음절 배열
+    currentInput: Array<{ ch: string, btn: HTMLElement }>, // inputMode용 현재 입력
+  },
+  lastGameWords: Set<string>,     // 직전 게임 단어 — 연속 플레이 중복 제한
+  userOverrides: object,          // 설정 화면에서 사용자가 명시적으로 변경한 값
 }
 ```
 
@@ -137,6 +149,47 @@ else:                        # 부족하면 반복 채움
 - UI 배지 색상: 초록(>60%) → 노랑(30-60%) → 빨강+펄스(<30%)
 - 0에 도달하면 `stopTimer()` + `onTimeout()` 콜백 호출
 - 콜백에서 `revealAnswer(timedOut=true)` → 오답 기록 → 1.8초 후 다음 문제
+
+### 3.4 글자 선택 모드 (inputMode)
+```
+buildSyllablePool(word) → pool
+  answer: 음절 배열 (예: ['바', '나', '나'])
+  distractors: 전체 단어 DB에서 answer에 없는 음절 8개 무작위 샘플
+  pool: shuffle([...answer, ...distractors])
+
+입력 흐름:
+  1. 음절 버튼 탭 → currentInput에 추가 + 슬롯에 표시
+  2. currentInput.length === targetSyllables.length → checkSyllableInput()
+  3. 전부 일치 → score++ + playCorrect + TTS + INPUT_CORRECT_DELAY(1200ms) 후 advance
+  4. 불일치 → wrongAnswers 추가 + playIncorrect + TTS + INPUT_WRONG_DELAY(2000ms) 후 advance
+  5. 지우기 버튼 → currentInput.pop() + 슬롯 초기화
+```
+
+### 3.5 힌트 시스템
+```
+useHint() 동작:
+  - inputMode=true: 다음 빈 슬롯에 해당하는 음절 버튼을 자동 선택(hint-used 표시)
+  - inputMode=false: hintCount++ → buildHintWord(word, hintCount)로 점진적 글자 공개
+      hintCount=1 → 첫 글자 공개 (나머지 초성)
+      hintCount=2 → 두 번째 글자 공개 ...
+      hintCount >= syllables.length → revealAnswer(false) 전체 공개
+
+buildHintWord(word, hintCount):
+  한글 음절 순서대로, hintCount번째 이전은 원래 글자, 이후는 초성만 표시
+```
+
+### 3.6 연속 플레이 중복 제한
+```
+pickQuestions(pool, needed, lastWords):
+  fresh   = pool.filter(w => !lastWords.has(w.word))
+  repeats = pool.filter(w =>  lastWords.has(w.word))
+
+  if fresh.length >= needed → shuffle(fresh).slice(0, needed)
+  else → [...fresh, ...shuffle(repeats).slice(0, needed - fresh.length)]
+  // fresh.length >= needed*0.8 이면 중복 ≤ 20% 자동 달성
+
+state.lastGameWords 는 세션 내 메모리에만 유지 (localStorage 미저장)
+```
 
 ## 4. 외부 API
 

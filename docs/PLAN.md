@@ -69,6 +69,20 @@
   - 기존 v2 단일 설정 → "게스트" 프로필 자동 마이그레이션
 - [x] `profile-ui.js` — 프로필 선택·생성 UI 렌더링
 
+## ✅ v2.2 — 입력 모드 확장 + 레벨 버튼 (완료)
+
+### Phase 9 — 글자 선택 모드 / 힌트 / 레벨 버튼
+- [x] `game.js` — `renderSyllableMode()` + `buildSyllablePool()`: 음절 버튼 탭으로 단어 입력
+  - 정답 음절 + 방해 음절(8개) 풀 생성, 순서 입력, 자동 채점
+- [x] `game.js` — `useHint()`: 두 가지 모드 힌트
+  - 일반 모드: `buildHintWord`로 초성→글자 점진 공개
+  - 글자 선택 모드: 다음 음절 자동 선택 (`hint-used` 표시)
+- [x] `settings.js` — `inputMode` 토글 + `hintEnabled` 토글 설정 화면 반영
+- [x] `config.js` — `LEVEL_DEFAULTS`: 레벨 버튼(1~4) 별 기본 난이도 매핑
+- [x] `settings.js` — `startWithLevel(level)`: 레벨 버튼 클릭 시 난이도만 교체, 나머지 유저 설정 유지
+- [x] `state.js` — `lastGameWords` + `userOverrides`: 연속 플레이 중복 ≤ 20% 제한 + 사용자 설정 우선권
+- [x] `game.js` — `pickQuestions()`: fresh 우선 문제 선별 알고리즘
+
 ## 🚧 v3 — 다음 로드맵 (아이디어)
 
 ### P1 후보
@@ -117,7 +131,13 @@ main              # 배포 가능한 안정 버전
 
 ## 📝 릴리즈 노트
 
-### v2.1.0 (현재)
+### v2.2.0 (현재)
+- 글자 선택 모드 (`inputMode`): 초성 힌트 대신 음절 버튼 탭으로 직접 단어 조립
+- 힌트 시스템 (`hintEnabled`): 설정 화면에서 힌트 버튼 표시 여부 토글
+- 레벨 버튼 (1~4): 홈 화면에서 난이도 탭 → 즉시 게임 시작
+- 연속 플레이 중복 제한: 직전 게임 단어 재출제 ≤ 20% (fresh 우선 알고리즘)
+
+### v2.1.0
 - Web Audio API 정답/오답 효과음 (`sound.js`) — 외부 오디오 파일 없이 오실레이터로 생성
 - 다중 프로필 시스템 (`profiles.js`, `profile-ui.js`) — 최대 8개, emoji 아바타, 프로필별 독립 설정
 - 기존 v2 단일 설정 → "게스트" 프로필 자동 마이그레이션
