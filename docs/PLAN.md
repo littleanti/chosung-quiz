@@ -83,6 +83,17 @@
 - [x] `state.js` — `lastGameWords` + `userOverrides`: 연속 플레이 중복 ≤ 20% 제한 + 사용자 설정 우선권
 - [x] `game.js` — `pickQuestions()`: fresh 우선 문제 선별 알고리즘
 
+## ✅ v2.3 — 가로 모드 2컬럼 적응형 레이아웃 (완료)
+
+### Phase 10 — 반응형 가로 모드
+- [x] `screens.css` — `@media (orientation: landscape) and (max-height: 700px)` 추가
+  - 플레이 화면을 CSS Grid 2컬럼으로 전환 (카드 좌 / 입력+버튼 우)
+  - 글자 선택 모드 ON/OFF 모두 동일 CSS로 자동 적응 (그리드 auto-placement)
+- [x] 버튼 stretch 방지: `align-items: start` + 버튼-row `align-self: center`
+- [x] 카드 꽉 채우기: `align-self: stretch` + flex column + visual-area `flex: 1`
+- [x] viewport 비례 사이즈: 이모지/이미지/단어/버튼에 `clamp()` + vh/vw 적용
+- [x] 세로 모드 회귀 없음 검증 (Chrome MCP로 portrait/landscape 양쪽 동작 확인)
+
 ## 🚧 v3 — 다음 로드맵 (아이디어)
 
 ### P1 후보
@@ -131,7 +142,14 @@ main              # 배포 가능한 안정 버전
 
 ## 📝 릴리즈 노트
 
-### v2.2.0 (현재)
+### v2.3.0 (현재)
+- 가로 모드 2컬럼 적응형 레이아웃: 가로 + 낮은 높이 환경에서 플레이 화면 자동 2컬럼 (카드 좌 / 입력+버튼 우)
+- viewport 비례 사이즈: 이모지/이미지/단어/버튼이 `clamp()` + vh/vw로 작은 휴대폰부터 태블릿까지 자동 적응
+- 카드가 row 높이만큼 stretch되어 빈 공백 없이 꽉 채움
+- 글자 선택 모드 ON/OFF 모두 동일 CSS로 동작 (그리드 auto-placement)
+- 세로 모드는 영향 없음 (미디어 쿼리 안에서만 적용)
+
+### v2.2.0
 - 글자 선택 모드 (`inputMode`): 초성 힌트 대신 음절 버튼 탭으로 직접 단어 조립
 - 힌트 시스템 (`hintEnabled`): 설정 화면에서 힌트 버튼 표시 여부 토글
 - 레벨 버튼 (1~4): 홈 화면에서 난이도 탭 → 즉시 게임 시작

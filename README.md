@@ -2,7 +2,7 @@
 
 그림을 보고 한글 초성 힌트로 단어를 맞히는 웹 기반 한글 공부 게임입니다.
 
-![version](https://img.shields.io/badge/version-2.0.0-FF7757)
+![version](https://img.shields.io/badge/version-2.3.0-FF7757)
 ![license](https://img.shields.io/badge/license-MIT-6BCAB8)
 
 ## 🎮 주요 기능
@@ -21,6 +21,7 @@
 - **🎵 사운드 피드백**: 정답/오답 효과음 (Web Audio API, 외부 파일 없음)
 - **📝 틀린 문제 복습**: 종료 화면에서 오답 리스트 확인 + 발음 듣기
 - **💾 설정 자동 저장**: 프로필별 localStorage 저장
+- **📱 가로 모드 적응형 레이아웃**: 가로 화면에서 자동으로 카드/입력영역 2컬럼 전환, viewport 비례 사이즈 (모바일~태블릿)
 
 ## 🚀 빠른 시작
 

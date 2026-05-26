@@ -599,3 +599,76 @@
   flex-wrap: wrap;
   margin-top: 1rem;
 }
+
+/* ==========================================
+   가로 모드 (낮은 높이) - 플레이 화면 2컬럼 레이아웃
+   왼쪽: 카드 / 오른쪽: 글자 입력(있을 때) + 버튼
+   align-items: start 로 버튼-row가 row 높이만큼 stretch되는 것 방지
+   ========================================== */
+@media (orientation: landscape) and (max-height: 700px) {
+  .container { max-width: 880px; }
+
+  body { padding: 12px; }
+
+  #play-screen.active {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 20px;
+    row-gap: 6px;
+    align-content: start;
+    align-items: start;
+  }
+
+  #play-screen.active .play-header,
+  #play-screen.active .progress-bar { grid-column: 1 / -1; }
+
+  #play-screen.active .question-card {
+    grid-column: 1;
+    margin-bottom: 0;
+    align-self: stretch;        /* row 높이만큼 카드가 채워짐 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;    /* 카드 내부 컨텐츠 세로 가운데 */
+    align-items: center;        /* 자식 요소가 자체 크기 유지 (stretch 방지) */
+  }
+
+  #play-screen.active .syllable-input-area,
+  #play-screen.active #check-row,
+  #play-screen.active #result-row { grid-column: 2; }
+
+  /* 정답 확인/맞춤 버튼: column 좌우 + 위아래 가운데, 자체 크기로 (stretch 안 함) */
+  #play-screen.active #check-row,
+  #play-screen.active #result-row {
+    justify-self: center;
+    align-self: center;
+    margin-top: 0;
+  }
+
+  /* 버튼 크기: 화면 높이/폭에 비례 (작은 휴대폰에서 자동 축소) */
+  #play-screen.active .btn.big {
+    font-size: clamp(1rem, 3.5vh, 1.45rem);
+    padding: clamp(10px, 2.5vh, 16px) clamp(20px, 5vw, 44px);
+  }
+  #play-screen.active .btn.mint,
+  #play-screen.active .btn.red {
+    font-size: clamp(0.9rem, 3vh, 1.2rem);
+    padding: clamp(8px, 2vh, 14px) clamp(16px, 4vw, 28px);
+  }
+
+  /* 카드 내부 요소: viewport 높이에 비례하여 늘어남 (카드 꽉 채움) */
+  .emoji-display { font-size: clamp(4.5rem, 22vh, 7rem); }
+  .visual-area   { min-height: 0; flex: 1; margin-bottom: 0.2rem; }
+  .image-display { max-width: clamp(130px, 38vh, 220px); max-height: clamp(130px, 38vh, 220px); }
+  .word-display  { font-size: clamp(1.5rem, 6vh, 2.6rem); letter-spacing: 0.3rem; margin-top: 0.2rem; }
+  .category-tag  { margin-bottom: 0.3rem; }
+  .tts-button, .hint-button { width: 36px; height: 36px; font-size: 1rem; }
+  .tts-button  { top: 12px; right: 12px; }
+  .hint-button { bottom: 12px; left: 12px; }
+  .question-card { padding: 12px 16px; }
+
+  /* 입력 영역 축소 */
+  .syllable-input-area { margin-bottom: 0; gap: 10px; }
+  .syllable-slot { width: 48px; height: 56px; font-size: 1.6rem; }
+  .syllable-pool { grid-template-columns: repeat(5, 1fr); gap: 6px; max-width: none; }
+  .syllable-btn  { font-size: 1.3rem; }
+}

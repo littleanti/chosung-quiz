@@ -232,6 +232,41 @@ if (imageMode && imageUrl) {
 - 리스트 재렌더는 `innerHTML = ''` 후 `createElement` 루프
 - `display: none` 토글로 패널 전환 (리플로우 1회)
 
+### 5.3 가로 모드 2컬럼 레이아웃 (반응형)
+가로 모드(`orientation: landscape`) + 낮은 높이(`max-height: 700px`)에서 플레이 화면을 CSS Grid 2컬럼으로 전환. JS 변경 없음, 순수 CSS 미디어 쿼리.
+
+```css
+@media (orientation: landscape) and (max-height: 700px) {
+  .container { max-width: 880px; }
+
+  #play-screen.active {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;                       /* 버튼-row stretch 방지 */
+  }
+
+  #play-screen.active .question-card {
+    grid-column: 1;
+    align-self: stretch;                      /* row 높이만큼 카드 채움 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;                      /* 자식들 자체 크기 유지 */
+  }
+
+  #play-screen.active .syllable-input-area,
+  #play-screen.active #check-row,
+  #play-screen.active #result-row { grid-column: 2; }
+}
+```
+
+**핵심 설계 포인트**:
+- **그리드 자동 배치**: `syllable-input-area`가 `display:none`일 때 그리드에서 자동 제외되어 `#check-row`가 column 2 row 3에 자연스럽게 배치됨 → 입력 모드 ON/OFF 모두 동일한 CSS로 동작
+- **버튼 stretch 방지**: 그리드 컨테이너 `align-items: start` + 버튼-row `align-self: center` → 버튼이 row 높이만큼 늘어나는 거대 원형 버튼 문제 해결
+- **viewport 비례 사이즈**: 이모지 `clamp(4.5rem, 22vh, 7rem)`, 단어 `clamp(1.5rem, 6vh, 2.6rem)`, 버튼 `clamp(1rem, 3.5vh, 1.45rem)` — 작은 휴대폰부터 태블릿까지 자동 적응
+- **카드 꽉 채우기**: `align-self: stretch` + `flex-direction: column` + `justify-content: center` + visual-area `flex: 1` → 카드가 row 높이 채우면서 내부 요소 가운데 정렬
+- **세로 모드 영향 없음**: 미디어 쿼리 안에서만 적용되므로 세로 모드는 기존 단일 컬럼 그대로
+
 ## 6. 성능 고려사항
 
 | 영역 | 최적화 |
