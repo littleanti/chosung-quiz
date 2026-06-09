@@ -1,3 +1,8 @@
+> [!IMPORTANT]
+> **이 저장소는 [`hangul_game`](https://github.com/littleanti/hangul_game) 모노레포로 통합되었습니다.**
+> 앞으로 모든 개발·유지보수는 모노레포에서 진행되며, 이 저장소는 보관(archive)용입니다.
+> 🎮 통합 플레이 사이트: https://littleanti.github.io/hangul_game/
+
 # 🎨 초성 퀴즈 (Chosung Quiz)
 
 그림을 보고 한글 초성 힌트로 단어를 맞히는 웹 기반 한글 공부 게임입니다.
